@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct ApexPredatorEntity: Decodable {
+struct ApexPredatorEntity: Decodable, Identifiable {
     let id: Int
     let name: String
     let type: String
@@ -16,4 +17,12 @@ struct ApexPredatorEntity: Decodable {
     let movies: [String]
     let movieScenes: [MovieSceneEntity]
     let link: String
+    
+    var image: String {
+        name.lowercased().replacingOccurrences(of: " ", with: "")
+    }
+    
+    var typeT: PredatorType {
+         PredatorType.fromString(type)
+    }
 }
