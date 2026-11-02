@@ -29,7 +29,7 @@ struct MainView: View {
             
             List(filteredData) {predator in
                 NavigationLink() {
-                    DetailsView(
+                    DetailsView( 
                         predator: predator,
                         location: .camera(
                             MapCamera(

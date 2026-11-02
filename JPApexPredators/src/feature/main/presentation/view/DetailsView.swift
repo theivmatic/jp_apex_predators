@@ -39,15 +39,19 @@ struct DetailsView: View {
                             )
                         }
 
-                    Image(predator.image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: geo.size.width / 1.5, height: geo.size.height / 3.5)
+                    NavigationLink{
+                        PredatorImageView(image: predator.image)
+                    } label: {
+                        Image(predator.image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geo.size.width / 1.5, height: geo.size.height / 3.5)
                         //to flip image horrizontaly
-                        .scaleEffect(x: -1)
+                            .scaleEffect(x: -1)
                         //
-                        .shadow(color: .black, radius: 7)
-                        .offset(y: 20)
+                            .shadow(color: .black, radius: 7)
+                            .offset(y: 20)
+                    }
                 }
                 
                 VStack(alignment: .leading) {
