@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct DetailsView: View {
     let predator: ApexPredatorEntity
     @Environment(\.colorScheme) var colorScheme
+    @State var location: MapCameraPosition
+    let predators: [ApexPredatorEntity]
+    @Namespace var namespace
     
     var body: some View {
         GeometryReader { geo in
@@ -49,6 +53,37 @@ struct DetailsView: View {
                 VStack(alignment: .leading) {
                     Text(predator.name)
                         .font(.largeTitle)
+                    
+                    NavigationLink {
+                        MapView(
+                            image: predator.image,
+                            cameraPosition: location,
+                            location: predator.location,
+                            predators: predators,
+                        )
+                        .navigationTransition(
+                            .zoom(
+                                sourceID: 1,
+                                in: namespace,
+                            )
+                        )
+                    } label: {
+                        Map(position: $location) {
+                            Annotation(
+                                "",
+                                coordinate: predator.location
+                            ) {
+                                Image(systemName: "mappin.and.ellipse")
+                                    .font(.largeTitle)
+                                    .imageScale(.large)
+                                    .symbolEffect(.pulse)
+                                    .foregroundStyle(.black)
+                            }
+                        }
+                        .frame(height: 125)
+                        .clipShape(.rect(cornerRadius: 16))
+                    }
+                    .matchedTransitionSource(id: 1, in: namespace)
                     
                     Text("Appears In:")
                         .font(.title3)
@@ -92,27 +127,39 @@ struct DetailsView: View {
 }
 
 #Preview {
-    DetailsView(
-        predator: ApexPredatorEntity(
-            id: 1,
-            name: "Dolboeb",
-            type: "land",
-            latitude: 10.5,
-            longitude: -10.5,
-            movies: ["1", "2", "3"],
-            movieScenes: [
-                MovieSceneEntity(
-                    id: 1, 
-                    movie: "Huynya",
-                    sceneDescription: "Mnogo Huyni"
-                ),
-                MovieSceneEntity(
-                    id: 2,
-                    movie: "Pizda",
-                    sceneDescription: "Mnogo Huyni"
-                ),
-            ],
-            link: "https://google.com",
+    NavigationStack {
+        DetailsView(
+            predator: ApexPredatorEntity(
+                id: 1,
+                name: "Dolboeb",
+                type: "land",
+                latitude: 10.5,
+                longitude: -10.5,
+                movies: ["1", "2", "3"],
+                movieScenes: [
+                    MovieSceneEntity(
+                        id: 1, 
+                        movie: "Huynya",
+                        sceneDescription: "Mnogo Huyni"
+                    ),
+                    MovieSceneEntity(
+                        id: 2,
+                        movie: "Pizda",
+                        sceneDescription: "Mnogo Huyni"
+                    ),
+                ],
+                link: "https://google.com",
+            ),
+            location: .camera(
+                MapCamera(
+                    centerCoordinate: CLLocationCoordinate2D(
+                        latitude: 0,
+                        longitude: 0
+                    ),
+                    distance: 30000
+                )
+            ),
+            predators: []
         )
-    )
+    }
 }

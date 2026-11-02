@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct MainView: View {
     @State private var predators: [ApexPredatorEntity] = []
@@ -28,7 +29,19 @@ struct MainView: View {
             
             List(filteredData) {predator in
                 NavigationLink() {
-                    DetailsView(predator: predator)
+                    DetailsView(
+                        predator: predator,
+                        location: .camera(
+                            MapCamera(
+                                centerCoordinate: CLLocationCoordinate2D(
+                                    latitude: predator.latitude,
+                                    longitude: predator.longitude
+                                ),
+                                distance: 30000
+                            )
+                        ),
+                        predators: predators,
+                    )
                 } label: {
                     PredatorCard(predator: predator)
                 }

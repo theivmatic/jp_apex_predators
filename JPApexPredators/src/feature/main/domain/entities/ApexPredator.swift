@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 
 struct ApexPredatorEntity: Decodable, Identifiable {
     let id: Int
@@ -24,5 +25,9 @@ struct ApexPredatorEntity: Decodable, Identifiable {
     
     var typeT: PredatorType {
          PredatorType.fromString(type)
+    }
+    
+    var location: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
