@@ -8,7 +8,12 @@
 import Foundation
 import SwiftUI
 
-enum PredatorType {
+enum PredatorType: CaseIterable, Identifiable {
+    var id: PredatorType {
+        self
+    }
+    
+    case all
     case land
     case air
     case sea
@@ -28,6 +33,8 @@ enum PredatorType {
     
     var title: String {
         switch self {
+        case .all:
+            "All"
         case .land:
             "Land"
         case .air:
@@ -39,12 +46,27 @@ enum PredatorType {
     
     var color: Color {
         switch self {
+        case .all:
+            .black
         case .land:
             .brown
         case .air:
             .teal
         case .sea:
             .blue
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .all:
+                "square.stack.3d.up.fill"
+        case .land:
+                "leaf.fill"
+        case .air:
+                "wind"
+        case .sea:
+                "drop.fill"
         }
     }
 }

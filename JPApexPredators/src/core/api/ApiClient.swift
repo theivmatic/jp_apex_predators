@@ -27,4 +27,36 @@ class ApiClient {
         
         return []
     }
+    
+   static func search(for input: String, in predators: [ApexPredatorEntity]) -> [ApexPredatorEntity] {
+        if input.isEmpty {
+            return predators
+        } else {
+            return predators.filter {predator in
+                predator.name.localizedCaseInsensitiveContains(input)
+            }
+        }
+    }
+    
+    static func sort(by alphabetical: Bool, in predators: [ApexPredatorEntity]) -> [ApexPredatorEntity] {
+        var data = predators
+        
+        data.sort { a, b in
+           if alphabetical {
+               a.name < b.name
+           } else {
+               a.id < b.id
+           }
+        }
+        
+        return data
+    }
+    
+    static func filter(by type: PredatorType, in predators: [ApexPredatorEntity]) -> [ApexPredatorEntity] {
+        var data = predators
+        
+        return data.filter {predator in
+            predator.typeT == type
+        }
+    }
 }

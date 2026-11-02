@@ -11,16 +11,14 @@ struct MainView: View {
     @State private var predators: [ApexPredatorEntity] = []
     @Environment(\.colorScheme) var theme
     @State private var input: String = ""
+    @State private var alphabetical: Bool = false
     var filteredData: [ApexPredatorEntity] {
-        if input.isEmpty {
-            return predators
-        } else {
-            return predators.filter {predator in
-                predator.name.localizedCaseInsensitiveContains(input)
-            }
-        }
-            
+        let filteredData = ApiClient.filter(by: filterSelection, in: predators)
+        let sortedData = ApiClient.sort(by: alphabetical, in: filteredData.isEmpty ? predators : filteredData)
+        
+        return ApiClient.search(for: input, in: sortedData)
     }
+    @State private var filterSelection: PredatorType = .all
     
     var body: some View {
         NavigationStack {
@@ -30,8 +28,7 @@ struct MainView: View {
             
             List(filteredData) {predator in
                 NavigationLink() {
-                    Image(predator.image)
-                        .resizable().scaledToFit()
+                    DetailsView(predator: predator)
                 } label: {
                     PredatorCard(predator: predator)
                 }
@@ -40,6 +37,30 @@ struct MainView: View {
             .searchable(text: $input, placement: .navigationBarDrawer)
             .autocorrectionDisabled()
             .animation(.default, value: input)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        withAnimation {
+                            alphabetical.toggle()
+                        }
+                    } label: {
+                        Image(systemName: alphabetical ? "textformat" : "film")
+                            .symbolEffect(.bounce, value: alphabetical)
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker("Filter", selection: $filterSelection.animation()) {
+                            ForEach(PredatorType.allCases) {type in
+                                Label(type.title, systemImage: type.icon)
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                    }
+                }
+            }
         }
         .task {
             let data = ApiClient.decodeData()
