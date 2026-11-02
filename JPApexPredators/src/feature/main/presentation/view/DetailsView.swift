@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DetailsView: View {
     let predator: ApexPredatorEntity
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         GeometryReader { geo in
@@ -18,6 +19,21 @@ struct DetailsView: View {
                     Image(predator.type)
                         .resizable()
                         .scaledToFit()
+                        .overlay {
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .clear, location: 0.9),
+                                    Gradient.Stop(
+                                        color: colorScheme == .dark
+                                            ? .black
+                                            : .white,
+                                        location: 1,
+                                    ),
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom,
+                            )
+                        }
 
                     Image(predator.image)
                         .resizable()
